@@ -11,6 +11,8 @@ using System.Web;
 
 namespace AngularJSAuthentication.API.Providers
 {
+    using System.Globalization;
+
     public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
@@ -84,9 +86,11 @@ namespace AngularJSAuthentication.API.Providers
 
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
 
+            IdentityUser user;
+
             using (AuthRepository _repo = new AuthRepository())
             {
-                IdentityUser user = await _repo.FindUser(context.UserName, context.Password);
+                user = await _repo.FindUser(context.UserName, context.Password);
 
                 if (user == null)
                 {
@@ -96,6 +100,7 @@ namespace AngularJSAuthentication.API.Providers
             }
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id, ClaimValueTypes.String, "LOCAL_AUTHORITY"));
             identity.AddClaim(new Claim(ClaimTypes.Name, context.UserName));
             identity.AddClaim(new Claim(ClaimTypes.Role, "user"));
             identity.AddClaim(new Claim("sub", context.UserName));

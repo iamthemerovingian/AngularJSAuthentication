@@ -40,6 +40,15 @@ namespace AngularJSAuthentication.API.Migrations
                     AllowedOrigin = "http://ngauthenticationweb.azurewebsites.net"
                 },
                 new Client
+                { Id = "ngAuthAppSignalR", 
+                    Secret= Helper.GetHash("abc@12345"), 
+                    Name="AngularJS front-end Application with SignalR", 
+                    ApplicationType =  Models.ApplicationTypes.JavaScript, 
+                    Active = true, 
+                    RefreshTokenLifeTime = 7200, 
+                    AllowedOrigin = "*"
+                },
+                new Client
                 { Id = "consoleApp", 
                     Secret=Helper.GetHash("123@abc"), 
                     Name="Console Application", 

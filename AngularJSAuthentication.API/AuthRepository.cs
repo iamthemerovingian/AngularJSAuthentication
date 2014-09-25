@@ -44,6 +44,22 @@ namespace AngularJSAuthentication.API
             return user;
         }
 
+        public IdentityUser FindUser(string email)
+        {
+            try
+            {
+                var user = _userManager.FindByName(email);
+
+                return user;
+            }
+            catch (Exception)
+            {
+                return null;
+                
+            }
+
+        }
+
         public Client FindClient(string clientId)
         {
             var client = _ctx.Clients.Find(clientId);
